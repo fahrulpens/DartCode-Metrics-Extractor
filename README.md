@@ -1,37 +1,4 @@
-
-# dart_metrics_modular
-
-Modular Python toolkit to extract Dart/Flutter UI metrics from **code snippets**.
-
-## Layout
-```
-metrics/
-  common.py     # comment stripping, helpers
-  methods.py    # NoM, NoP
-  complexity.py # CC
-  nesting.py    # MND
-  fields.py     # NoF
-  comments.py   # CR
-  widgets.py    # NoW, MNW, SCCL
-  all_metrics.py# METRICS & ALIASES registry
-cli/
-  get_metric.py # single metric
-  get_metrics.py# multiple metrics
-```
-
-## Examples
-```bash
-# Single metric
-python3 cli/get_metric.py --metric LoC --stdin <<'DART'
-class A { /* hi */ int x = 1; } // end
-DART
-
-# Multiple metrics
-python3 cli/get_metrics.py --metrics LoC,NoF,CR --stdin <<'DART'
-class A { final int a,b=2; void f(){ if(true){} } } // comment
-DART
-```
-
+# DartCode Metrics Extractor
 
 ## Overview
 This toolkit extracts 20 Dart/Flutter UI metrics from code snippets (not whole projects). You can:
@@ -90,7 +57,7 @@ python3 -m cli.get_metric --metric CC --file snippet.dart
 ```
 
 ## How to run (Excel batch)
-# Required input
+### Required input
 An Excel file (.xlsx/.xls) with at least:
 •	sample_id
 •	code_snippet
@@ -121,6 +88,7 @@ python3 -m cli.batch_excel --input data.xlsx --metrics LoC,CC,API,DbC
 ```
 
 # The 20 metrics — what each checks
+```bash
 1.	Line of Code (LoC) — label LoC
 What it checks: Non-empty, non-comment lines.
 Counts: Any line with tokens after stripping comments.
@@ -213,6 +181,7 @@ What it checks: Timer/stream creations (often long-lived).
 Counts: Timer(...), Timer.periodic(...), StreamController(...), Stream.periodic(...), RxDart BehaviorSubject/PublishSubject/ReplaySubject(...).
 Module: runtime_effects.py :: timer_stream_init_count
 All detectors ignore commented-out code. Heuristics are conservative and Flutter-aware; we can tighten/extend patterns for your corpus if needed.
+```
 
 ## Quick cheatsheet
 ```bash
