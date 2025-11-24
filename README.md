@@ -89,50 +89,61 @@ python3 -m cli.batch_excel --input data.xlsx --metrics LoC,CC,API,DbC
 
 # The 20 metrics — what each checks
 ```bash
-1.	Line of Code (LoC) — label LoC
+# 1.	Line of Code (LoC) — label LoC
 What it checks: Non-empty, non-comment lines.
 Counts: Any line with tokens after stripping comments.
 Ignores: Blank lines, // …, /* … */.
 Module: comments.py :: count_loc
-2.	Number of Methods (NoM) — label NoM
+
+# 2.	Number of Methods (NoM) — label NoM
 What it checks: Declarations that look like name(...) { … } (functions/methods/constructors).
 Counts: Any identifier ( … ) { that isn’t a control keyword (if/for/while/switch/catch/else).
 Module: methods.py :: number_of_methods
-3.	Number of Parameters (NoP) — label NoP
+
+# 3.	Number of Parameters (NoP) — label NoP
 What it checks: Maximum number of parameters among all methods found by NoM.
 Counts: Positional + named + optional; ignores commas inside <…>, {…}, […], (…), and strings.
 Module: methods.py :: max_number_of_params
-4.	Cyclomatic Complexity (CC) — label CC
+
+# 4.	Cyclomatic Complexity (CC) — label CC
 What it checks: Decision points, then adds 1 (McCabe’s baseline).
 Counts: if, for, while, case, catch, &&, ||, ternary ?:.
 Change baseline: In complexity.py, switch return 1 + decisions → return decisions.
 Module: complexity.py :: cyclomatic_complexity
-5.	Maximum Nesting Depth (MND) — label MND
+
+# 5.	Maximum Nesting Depth (MND) — label MND
 What it checks: Deepest {…} nesting minus the outermost scope.
 Counts: Block depth within the snippet (strings are ignored correctly).
 Module: nesting.py :: max_nesting_depth
-6.	Number of Fields (NoF) — label NoF
+
+# 6.	Number of Fields (NoF) — label NoF
 What it checks: Class-level fields in class { … } bodies.
 Counts: int a, b = 2;, final x = …;.
 Ignores: Methods/getters/abstract signatures (we skip top-level stmts that have ().
 Module: fields.py :: number_of_fields
-7.	Comment Ratio (CR) — label CR
+
+# 7.	Comment Ratio (CR) — label CR
 What it checks: comment_lines / LoC rounded to 3 decimals.
 Module: comments.py :: comment_ratio
-8.	Number of Widget (NoW) — label NoW
+
+# 8.	Number of Widget (NoW) — label NoW
 What it checks: Capitalized constructor calls: CapitalizedName( (heuristic).
 Counts: MaterialApp(, Padding(, Splash(); also capitalized non-widgets like ThemeData(.
 Module: widgets.py :: number_of_widgets
-9.	Maximum Nesting Widget Tree Depth (MNW) — label MNW
+
+# 9.	Maximum Nesting Widget Tree Depth (MNW) — label MNW
 What it checks: Maximum depth of capitalized constructor nesting: A(B(C())) → 3.
 Module: widgets.py :: max_widget_nesting
-10.	Single-Child Wrapper Chain Length (SCCL) — label SCCL
+
+# 10.	Single-Child Wrapper Chain Length (SCCL) — label SCCL
 What it checks: Longest nested chain of child: CapitalizedCtor( … ).
 Module: widgets.py :: child_chain_max_depth
-11.	SetState Call Count (sStC) — label sStC
+
+# 11.	SetState Call Count (sStC) — label sStC
 What it checks: setState( occurrences (after comment stripping).
 Module: side_effects.py :: setstate_call_count
-12.	Provider/Bloc Mutation Count (PBM) — label PBM
+
+# 12.	Provider/Bloc Mutation Count (PBM) — label PBM
 What it checks: State mutations through common state managers.
 Counts (examples):
 •	context.read<T>(...).add(...) / .emit(...)
@@ -141,20 +152,24 @@ Counts (examples):
 •	Provider.of<T>(context).prop = …
 •	ref.read(provider).state = … (Riverpod)
 Module: side_effects.py :: provider_bloc_mutation_count
-13.	Field Assignment Count (FAC) — label FAC
+
+# 13.	Field Assignment Count (FAC) — label FAC
 What it checks: Writes to class fields inside UI logic.
 Counts: this.count = …;, widget.flag = …;
 Ignores: Local variable assignments without this./widget.
 Module: side_effects.py :: field_assignment_count
-14.	Mutable Collection Modification Count (MC) — label MC
+
+# 14.	Mutable Collection Modification Count (MC) — label MC
 What it checks: List/Map mutations.
 Counts: .add(...), .addAll(...), .insert(...), .remove(...), .removeWhere(...), .clear(...), and x[ ... ] = ....
 Module: side_effects.py :: mutable_collection_mod_count
-15.	API Call Count (API) — label API
+
+# 15.	API Call Count (API) — label API
 What it checks: Common network calls.
 Counts: http.get/post/put/delete/patch/head(…), Dio().get/post/…, dio.get/post/…, WebSocket.connect(…).
 Module: side_effects.py :: api_call_count
-16.	Database Call Count (DbC) — label DbC
+
+# 16.	Database Call Count (DbC) — label DbC
 What it checks: Typical DB/storage operations (sqflite, Hive, SharedPreferences, Drift/Moor, Sembast, generic db.*).
 Counts:
 •	Generic: db.insert/update/delete/query/execute/transaction(…)
@@ -164,19 +179,23 @@ Counts:
 •	Sembast: store.record(...).put/get/delete(...)
 Note: Your current config includes handle acquisition (openBox, getInstance) — that’s why your example was DbC : 5.
 Module: runtime_effects.py :: database_call_count
-17.	Synchronous I/O Count (SyncIO) — label SyncIO
+
+# 17.	Synchronous I/O Count (SyncIO) — label SyncIO
 What it checks: Blocking file ops from dart:io and sleep().
 Counts: readAsStringSync, readAsBytesSync, writeAs*Sync, openSync, renameSync, deleteSync, createSync, existsSync, statSync, copySync, sleep(...).
 Module: runtime_effects.py :: sync_io_count
-18.	Image Codec Call Count (ImgC) — label ImgC
+
+# 18.	Image Codec Call Count (ImgC) — label ImgC
 What it checks: Image decode/codec usage that may be heavy for UI.
 Counts: instantiateImageCodec(...), decodeImageFromList(...), decodeImage(...), ImageDescriptor.encoded(...).
 Module: runtime_effects.py :: image_codec_count
-19.	Async/Await in UI (AsyncUI) — label AsyncUI
+
+# 19.	Async/Await in UI (AsyncUI) — label AsyncUI
 What it checks: await occurrences in the snippet (comment-stripped).
 Current scope: Any await in the snippet (not limited to build() only).
 Module: runtime_effects.py :: async_await_ui_count
-20.	Timer/Stream Init Count (TmrStr) — label TmrStr
+
+# 20.	Timer/Stream Init Count (TmrStr) — label TmrStr
 What it checks: Timer/stream creations (often long-lived).
 Counts: Timer(...), Timer.periodic(...), StreamController(...), Stream.periodic(...), RxDart BehaviorSubject/PublishSubject/ReplaySubject(...).
 Module: runtime_effects.py :: timer_stream_init_count
