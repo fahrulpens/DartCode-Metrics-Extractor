@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this catalog, please cite this repository."
+title: "DartCode Metrics Extractor"
+version: "1.0.0"
+date-released: "2025-11-25"
+authors:
+  - family-names: "Hardiansyah"
+    given-names: "Fadilah Fahrul"
+    email: fahrul@pens.ac.id
+    orcid: 'https://orcid.org/0000-0003-3310-6103'
+repository-code: "https://github.com/fahrulpens/DartCode-Metrics-Extractor"
+doi: "10.5281/zenodo.17702213"
+type: software
+license: "MIT"
+keywords:
+  - Dart
+  - Flutter
+  - Metrics Extractor
+  - Quality Metrics
+  - Code Metrics
